@@ -1,10 +1,16 @@
-# Від Jupyter Notebook до веб-додатку: розгортання ML-моделі
+# Прогноз міцності бетону: від Jupyter Notebook до веб-додатку
 
-Демо до доповіді Knowledge sharing (тема 14) з курсу «Основи машинного навчання».
-Гаврась Павло, КС-31.
+**Живе демо:** _посилання з'явиться після розгортання_
 
-Модель із лабораторної роботи №1 прогнозує **міцність бетону на стиск** (МПа) за складом суміші.
-Тут вона «виходить» із ноутбука: зберігається у файл і працює у двох веб-інтерфейсах.
+Модель GradientBoosting прогнозує **міцність бетону на стиск** (МПа) за складом суміші
+(R² = 0.94 на тестових даних). Тут модель «виходить» із ноутбука: зберігається у файл
+і працює у двох веб-інтерфейсах — Streamlit і Gradio.
+
+Демо до доповіді Knowledge sharing (тема 14: «Від Jupyter Notebook до веб-додатку:
+базове розгортання моделей») з курсу «Основи машинного навчання», ХНУ ім. В. Н. Каразіна.
+Автор — Гаврась Павло, КС-31.
+
+![Застосунок Streamlit](screenshots/streamlit_example.png)
 
 ## Що де лежить
 
@@ -16,15 +22,18 @@
 | `app_gradio.py` | Той самий прогноз на Gradio — для порівняння (≈30 рядків) |
 | `model/model_meta.json` | Межі ознак, метрики, версія scikit-learn, дата навчання |
 | `model/test_examples.csv` | Тестова вибірка — приклади, яких модель не бачила |
-| `requirements.txt` | Зафіксовані версії бібліотек |
+| `requirements.txt` | Зафіксовані версії бібліотек (для Streamlit і хостингу) |
+| `requirements-gradio.txt` | Те саме + Gradio |
 
 ## Запуск
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python train_model.py          # Test R2 ≈ 0.94, MAE ≈ 2.5 МПа
+python train_model.py           # Test R2 ≈ 0.94, MAE ≈ 2.5 МПа (модель уже є в model/)
 streamlit run app_streamlit.py  # http://localhost:8501
+
+pip install -r requirements-gradio.txt
 python app_gradio.py            # http://127.0.0.1:7860
 ```
 
@@ -35,3 +44,9 @@ python app_gradio.py            # http://127.0.0.1:7860
 3. **Фіксувати версії.** Модель, збережена в одній версії scikit-learn, у іншій може не завантажитись або давати інші відповіді.
 4. **Не довіряти чужим `.pkl`/`.joblib`.** Завантаження такого файлу може виконати довільний код.
 5. **Показувати межі моделі.** Застосунок попереджає, коли введені дані виходять за межі навчальних.
+
+## Дані
+
+[Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength),
+UCI Machine Learning Repository (автор — I-Cheng Yeh, 1998; ліцензія CC BY 4.0):
+1030 вимірювань, після видалення 25 повних дублікатів — 1005.
